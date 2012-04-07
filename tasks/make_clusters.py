@@ -8,4 +8,6 @@ session = courserecommender.server.db()
 from courserecommender.models import *
 
 Store._session = session
-Cluster.make_clusters()
+
+k = int(sys.argv[1])
+Cluster.make_clusters(k)

@@ -151,8 +151,8 @@ class Cluster(Base, Store):
 		self.centroid = pickle.dumps(self.centroid)
 	
 	@classmethod
-	def make_clusters(klass):
-		clusters = Cluster.clusterize(User.all(), 5, User.similarity, 5)
+	def make_clusters(klass, k=3):
+		clusters = Cluster.clusterize(User.all(), k, User.similarity, 5)
 		klass.session().query(Cluster).delete()
 		# TODO LATER: RACE CONDITIONS. What happens if a user is added right now?
 		for users, centroid in clusters:
