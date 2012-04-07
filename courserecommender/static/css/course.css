@@ -62,6 +62,39 @@ form#userinput > input[type="text"] {
 
 #autocomplete {
 	list-style-type: none;
+	line-height: 2;
+	width: 100%;
+}
+
+#autocomplete td{
+	padding-left: 5px;
+	clear: both;
+}
+
+#autocomplete td.coursecode{
+	width: 100px;
+}
+
+#autocomplete .professor {
+	opacity: 0;
+	color: rgb(166,166,166);
+	-webkit-transition: all 200ms ease-in-out;
+	-moz-transition: all 200mx ease-in-out;
+	-o-transition: all 200ms ease-in-out;
+	cursor: default;
+}
+
+#autocomplete .professor:hover {
+	opacity: 1;
+}
+
+tr svg {
+	position: relative !important;
+	top: auto !important;
+	float: right;
+	padding-right: 5px;
+	vertical-align: middle;
+	display: inline-block;
 }
 
 #autocomplete .match {
