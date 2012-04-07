@@ -2,9 +2,14 @@ import sys, os.path
 project_parent = os.path.dirname(os.path.dirname(__file__))
 sys.path.append(project_parent)
 
-from courserecommender.models import Ranking, User
 from courserecommender import cluster
+from courserecommender import server
+from courserecommender.models import *
 from random import randint, choice
+
+session = server.db()
+ranking_store = RankingStore(session)
+user_store = UserStore(session)
 
 r1 = Ranking(course_id = 1, value = 2, user_id = 1)
 r2 = Ranking(course_id = 2, value = -2, user_id = 1)
@@ -23,26 +28,26 @@ r11 = Ranking(course_id = 6, value = 2, user_id = 2)
 
 user_2 = User(id = 2, rankings = [r6, r7, r8, r9, r10, r11])
 
-users = []
-all_rankings = []
+#user_store.save([user_1, user_2])
+#ranking_store.save([r1, r2, r3, r4,r5,r6,r7,r8,r9,r10,r11])
+
 for i in xrange(0, 20):
-	user = User(id = i)
+	user = User()
+	user_store.save(user)
 	
-	rankings = []
+	
 	r = list(xrange(1, 20))
 	for i in xrange(1, randint(2, 20)):
 		c = choice(r)
 		r.remove(c)
-		rank = Ranking(course_id = c, user_id = i, value = randint(-2,2))
-		rankings.append(rank)
-		all_rankings.append(rank)
-	user.rankings = rankings
-	users.append(user)
+		rank = Ranking(course_id = c, user_id = user.id, value = randint(-2,2))
+		ranking_store.save(rank)
+	print user
 	
 
 	
-print len(users)
-clusters = cluster.clusterize(users, 5, cluster.cos_similarity, all_rankings)
+print len(user_store.all())
+clusters = cluster.clusterize(user_store.all(), 5, cluster.cos_similarity, 5)
 for c in clusters:
 	print "Cluster: "
 	cluster2 = c
