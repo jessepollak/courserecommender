@@ -35,12 +35,6 @@ class User(Base, Store):
 	cluster_id = Column(Integer, ForeignKey("clusters.id"))
 	cluster = relationship("Cluster", backref=backref("users"))
 
-	def save(self):
-		if self.cluster_id == None:
-			cluster = Cluster.cluster_for_user(self)
-			self.cluster_id = cluster.id
-		super(User, self).save()
-
 	def recommended_courses(self):
 		if not self.cluster:
 			return []
@@ -153,6 +147,9 @@ class Cluster(Base, Store):
 	@classmethod
 	def make_clusters(klass, k=3):
 		clusters = Cluster.clusterize(User.all(), k, User.similarity, 5)
+		for u in User.all():
+			u.cluster_id = None
+			u.save()
 		klass.session().query(Cluster).delete()
 		# TODO LATER: RACE CONDITIONS. What happens if a user is added right now?
 		for users, centroid in clusters:
