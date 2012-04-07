@@ -29,6 +29,9 @@ class User(Base, Store):
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
 
+	def __repr__(self):
+		return "<User id=%s, username=%s>" % (self.id, self.username)
+
 class Ranking(Base, Store):
 	__tablename__ = 'rankings'
 
@@ -40,10 +43,11 @@ class Ranking(Base, Store):
 
 	@classmethod
 	def find_all_by_user_ids(klass, user_ids):
-		session = (Session or flask.g.db)
-		return session.query(Ranking).filter(Ranking.user_id.in_(user_ids)).all()
+		return klass.session().query(Ranking).filter(Ranking.user_id.in_(user_ids)).all()
 		
 class Course(Base, Store):
 	__tablename__ = 'courses'
 
 	id = Column(Integer, primary_key=True)
+
+	

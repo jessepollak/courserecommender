@@ -7,9 +7,7 @@ from courserecommender import server
 from courserecommender.models import *
 from random import randint, choice
 
-session = server.db()
-ranking_store = RankingStore(session)
-user_store = UserStore(session)
+Base._session = server.db()
 
 r1 = Ranking(course_id = 1, value = 2, user_id = 1)
 r2 = Ranking(course_id = 2, value = -2, user_id = 1)
@@ -33,7 +31,7 @@ user_2 = User(id = 2, rankings = [r6, r7, r8, r9, r10, r11])
 
 for i in xrange(0, 20):
 	user = User()
-	user_store.save(user)
+	user.save()
 	
 	
 	r = list(xrange(1, 20))
@@ -41,20 +39,18 @@ for i in xrange(0, 20):
 		c = choice(r)
 		r.remove(c)
 		rank = Ranking(course_id = c, user_id = user.id, value = randint(-2,2))
-		ranking_store.save(rank)
+		rank.save()
 	print user
 	
 
 	
-print len(user_store.all())
-clusters = cluster.clusterize(user_store.all(), 5, cluster.cos_similarity, 5)
+print len(User.all())
+clusters = cluster.clusterize(User.all(), 5, cluster.cos_similarity, 5)
 for c in clusters:
 	print "Cluster: "
-	cluster2 = c
 	for item in c:
-		print "Similarity: "
-		for i in cluster2:
-			print cluster.cos_similarity(item, i)
+		print item
+		print [(r.value, r.course_id) for r in item.rankings]
 			
 	
 	
