@@ -22,7 +22,8 @@ def cos_similarity(a, b):
 	a_rankings = a.rankings
 	b_rankings = b.rankings
 	if len(a_rankings) == 0 or len(b_rankings) == 0:
-		return 0
+		return 0.0
+		
 	dot_product = 0
 	a_mag = 0
 	b_mag = 0
@@ -33,12 +34,15 @@ def cos_similarity(a, b):
 				dot_product += b_rank.value*a_rank.value
 				
 	for a_rank in a_rankings:
-		a_mag += a_rank.value ** 2
+		a_mag += float(a_rank.value) ** 2
 	a_mag = math.sqrt(a_mag)
 		
 	for b_rank in b_rankings:
-		b_mag += b_rank.value ** 2
+		b_mag += float(b_rank.value) ** 2
 	b_mag = math.sqrt(b_mag)
+	
+	if b_mag == 0 or a_mag == 0:
+		return 0.0
 
 	return dot_product / float(a_mag*b_mag)
 	
