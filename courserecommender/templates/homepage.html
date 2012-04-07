@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% block main_content %}
     <form id="userinput">
-        <input type="text"/>
+        <input type="text" placeholder="Start typing a course name..."/>
     </form>
     <svg width="10px" height="10px">
     	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 1; cursor: pointer; stroke-width: 0" fill="white" stroke="#c2c3c5" d="M3,4l0,0,2,-4l0,0,2,4h3l0,0,-3,2l0,0,1,4l0,0,-3,-4l0,0,-3,4l0,0,1,-4" opacity="1" fill-opacity="1" stroke-width="1.5" stroke-opacity="1"></path>
 	</svg>
+    <ul id="autocomplete">
+      <li><strong>MATH101 PO-01</strong> &ndash; Intro to Analysis</li>
+    </ul>
 {% endblock %}
