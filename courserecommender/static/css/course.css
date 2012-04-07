@@ -43,6 +43,10 @@ div#userinput > input[type="text"] {
 	display: block;
 }
 
+.remove {
+	cursor: pointer;
+}
+
 .removebox {
 	width: 12px;
 	height: 12px;
@@ -63,6 +67,7 @@ div#userinput > input[type="text"] {
 #autocomplete {
 	list-style-type: none;
 	line-height: 2;
+	text-align: center;
 	width: 100%;
 }
 
