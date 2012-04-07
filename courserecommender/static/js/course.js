@@ -40,13 +40,9 @@ new course("ART 15","The grand use of Raphael JS in the world of Modern Art: a r
 
 var selected_courses = [];
 
-function id_for_course(course) {
-    return course.code.replace(/\s/g, '_');
-}
-
 function course_for_id(id) {
     for (var i = 0; i < selected_courses.length; i++) {
-        if(id_for_course(selected_courses[i]) == id) {
+        if(selected_courses[i].id == id) {
             return selected_courses[i];
         }
     }
@@ -54,36 +50,32 @@ function course_for_id(id) {
 }
 
 function remove_course(course) {
-    $("#"+id_for_course(course)).remove();
+    $("#"+course.id).remove();
+    $("#rating_"+course.id).remove();
     selected_courses.splice(selected_courses.indexOf(course), 1);
 }
 
 function select_course(course) {
     for (var i = 0; i < selected_courses.length; i++) {
-        if(selected_courses[i].code == course.code) {
+        if(selected_courses[i].id == course.id) {
             return false;
         }
     }
     selected_courses.push(course);
-    $("#autocomplete").append('<tr id="' + id_for_course(course) + '"><td class="coursecode">' +
-        '<strong>' + course.code + "</strong>" + "</td><td>" +
-        course.name+'<font class="professor">' + "\t"+course.instructor + '</font></td></tr>');
-    $("#"+id_for_course(course)).append("<td class='deletebox'>"+deletebox+"</td>");
+    // $("#autocomplete").append('<tr id="' + id_for_course(course) + '"><td class="coursecode">' +
+    //     '<strong>' + course.code + "</strong>" + "</td><td>" +
+    //     course.name+'<font class="professor">' + "\t"+course.instructor + '</font></td></tr>');
+    // $("#"+id_for_course(course)).append("<td class='deletebox'>"+deletebox+"</td>");
     
-    $("#"+id_for_course(course)+" .remove").click(function (evt) {
+    // $("#"+id_for_course(course)+" .remove").click(function (evt) {
+    $("#autocomplete").append('<tr id="' + course.id + '"><td>' +
+        course.name+'</td></tr>');
+    deletebtn("#" + course.id);
+    $("form#course_ratings").append('<input id="'+ course.id + '" type="hidden" name="'+ course.id + '" value="0">');
+    $("#" + course.id + " .remove").click(function (evt) {
         remove_course(course_for_id(this.parentNode.parentNode.parentNode.id));
     });
 }
-
-// function deletebtn(somedivid) {
-// 	var target = $(somedivid).append("<td class='removebox'></td>").find("td")[2];
-// 	var canvas = Raphael($("body"), 20,20);
-// 	target.appendChild(canvas.canvas);
-// 	var circ = canvas.ellipse(10,10,10,10).attr({fill:"rgb(50,52,50)", "stroke-width": 0,cursor: "pointer"});
-// 	var icon = canvas.path("m"+(8.5)+","+(8.5)+"v-5h3v5h5v3h-5v5h-3v-5h-5v-3z").attr({fill:"rgb(254,254,254)", "stroke-width": 0,cursor: "pointer"}).transform("r45");
-// 	icon[0].setAttribute("class","remove");
-// 	circ[0].setAttribute("class","remove");
-// }
 
 $("document").ready( function () {
 	for (var i=0; i<database.length;i++){
@@ -99,11 +91,11 @@ $("document").ready( function () {
 	}
 	
 	$("#userinput input[type='text']").autocomplete({
-	    source: autocompletions,
+	    source: '/courses',
 	    autoFocus: true,
 	    search: function (event, ui) { console.log("Searching..."); },
 	    select: function (event, ui) {
-	        var course =  ui.item.value;
+	        var course =  {"id": ui.item.value, "name": ui.item.label};
 	        select_course(course);
 	        $("#userinput input").val('');
 	        return false;

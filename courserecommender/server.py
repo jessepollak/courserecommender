@@ -1,6 +1,5 @@
-import flask
+import flask, json
 from flask import Flask, g, render_template, request, session, redirect, url_for
-from flaskext.sqlalchemy import SQLAlchemy
 import itertools
 import os
 
@@ -11,9 +10,6 @@ app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!j4mNLWX/,?RT'
 db = models.init(os.environ.get("DATABASE_URL", "sqlite:///development.sqlite3"))
 
-def _get_user():
-    return g.db.query(models.User).filter(models.User.username==request.form['username'])[0]
-
 @app.before_request
 def before_request():
 	g.db = db()
@@ -23,10 +19,28 @@ def teardown_request(exception=None):
 	if hasattr(g, 'db'):
 		g.db.close()
 
+@app.route("/store_recs")
+def store_recs():
+    recs = []
+    for key, value in request.form.values():
+        recs.append(int(value))
+    
+    print recs
+    return ''
+
 @app.route("/courses")
-def courses_index():
-	course_store = CourseStore(g.db)
-	return repr(course_store.all())
+def courses():
+	match_with = request.args.get('term', None)
+	if not match_with:
+	    return json.dumps([])
+	matches = g.db.query(models.Course).filter(
+	    models.Course.name.like('%' + match_with + '%')).all()
+	print matches
+	course_data = []
+	for match in matches:
+	    course_data.append({"label": match.name, "value": match.id})
+	
+	return json.dumps(course_data)
 
 @app.route('/')
 def homepage():
@@ -35,12 +49,11 @@ def homepage():
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
     if request.method == "POST":
-        print g.db.query(models.User).filter(models.User.username==request.form['username'])
-        user = g.db.query(models.User).filter(models.User.username==request.form['username']).count()
+        print models.User.find_all_by_username(request.form['username'])
+        user = len(models.User.find_all_by_username(request.form['username']))
         if not user:
             new_user = models.User(username=request.form['username'])
-            g.db.add(new_user)
-            g.db.commit()
+            new_user.save()
         session['username'] = request.form['username']
         return redirect('/')
     else:
@@ -55,4 +68,4 @@ def logout():
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='127.0.0.1', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=True)

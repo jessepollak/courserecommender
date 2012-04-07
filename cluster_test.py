@@ -45,7 +45,7 @@ for i in xrange(0, 20):
 
 	
 print len(User.all())
-clusters = cluster.clusterize(User.all(), 5, cluster.cos_similarity, 5)
+clusters = Cluster.clusterize(User.all(), 5, User.similarity, 5)
 for c in clusters:
 	print "Cluster: "
 	for item in c:
