@@ -59,6 +59,7 @@ function course_for_id(id) {
 
 function remove_course(course) {
     $("#"+course.id).remove();
+    $("#rating_"+course.id).remove();
     selected_courses.splice(selected_courses.indexOf(course), 1);
 }
 
@@ -72,7 +73,7 @@ function select_course(course) {
     $("#autocomplete").append('<tr id="' + course.id + '"><td>' +
         course.name+'</td></tr>');
     deletebtn("#" + course.id);
-    
+    $("form#course_ratings").append('<input id="'+ course.id + '" type="hidden" name="'+ course.id + '" value="0">');
     $("#" + course.id + " .remove").click(function (evt) {
         remove_course(course_for_id(this.parentNode.parentNode.parentNode.id));
     });

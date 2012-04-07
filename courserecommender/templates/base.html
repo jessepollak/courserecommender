@@ -18,7 +18,7 @@
     <hgroup>
       <h1>CourseRecommender</h1>
       <h2>Recommending courses and whatever.</h2>
-      {% if not auth_in_progress %}<h3>{% if session.username %}hi there {{ session.username }}, nice to see you! <a href="/logout">log out?</a>{% else %}been here before? <form action="/auth" method="POST"><input type="text" placeholder="ces02006@mymail.pomona.edu"><input type="submit" value="&rarr;"></form>{% endif %}</h3>{% endif %}
+      {% if not auth_in_progress %}<h3>{% if session.username %}hi there {{ session.username }}, nice to see you! <a href="/logout">log out?</a>{% else %}have we met before? <form action="/auth" method="POST"><input type="text" placeholder="ces02006@mymail.pomona.edu" name="username"><input type="submit" value="&rarr;"></form>{% endif %}</h3>{% endif %}
     </hgroup>
   </header>
   <div id="container">

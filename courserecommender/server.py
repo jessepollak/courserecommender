@@ -20,6 +20,15 @@ def teardown_request(exception=None):
 	if hasattr(g, 'db'):
 		g.db.close()
 
+@app.route("/store_recs")
+def store_recs():
+    recs = []
+    for key, value in request.form.values():
+        recs.append(int(value))
+    
+    print recs
+    return ''
+
 @app.route("/courses")
 def courses():
 	match_with = request.args.get('term', None)
