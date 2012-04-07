@@ -1,7 +1,7 @@
 import flask
 from itertools import groupby
 import math
-from random import sample
+import random
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, sessionmaker
@@ -10,7 +10,7 @@ import pickle
 Base = declarative_base()
 from sqlalchemy import Column, ForeignKey, Integer, String, Text
 
-def init(url, echo=False):
+def init(url, echo=True):
 	engine = create_engine(url, echo=echo)
 	return sessionmaker(bind=engine)
 
@@ -35,13 +35,25 @@ class User(Base, Store):
 	cluster_id = Column(Integer, ForeignKey("clusters.id"))
 	cluster = relationship("Cluster", backref=backref("users"))
 
-	def get_similar_users(self):
-		users_in_cluster = self.cluster.users
+	def recommended_courses(self):
+		users_in_cluster = self.cluster.users[:]
 		users_in_cluster.remove(self)
-		random_users = random.sample(users_in_cluster, min(10, len(users_in_cluster)))
+		random_users = random.sample(users_in_cluster, min(5, len(users_in_cluster)))
 
-		u.rankingsrandom_users
+		good_courses = [u.good_courses() for u in random_users]
+		course_recommendations = []
+		for courses in good_courses:
+			for course in courses:
+				if not course in self.courses() and not course in course_recommendations:
+					course_recommendations.append(course)
+		
+		return random.sample(course_recommendations, min(5, len(course_recommendations)))
 
+	def courses(self):
+		return self.__class__.session().query(Course).join("rankings", "user").filter(User.id == self.id).all()
+
+	def good_courses(self):
+		return self.__class__.session().query(Course).join("rankings", "user").filter(User.id == self.id).filter(Ranking.value > 0).all()
 
 	@classmethod
 	def similarity(klass, a, b):
@@ -84,7 +96,7 @@ class Ranking(Base, Store):
 	course_id = Column(Integer, ForeignKey('courses.id'))
 	value = Column(Integer)
 	user = relationship("User", backref=backref("rankings"))
-	course = relationship("Course", backref=backref("course"))
+	course = relationship("Course", backref=backref("rankings"))
 
 	@classmethod
 	def find_all_by_user_ids(klass, user_ids):
@@ -151,7 +163,7 @@ class Cluster(Base, Store):
 		
 	@classmethod
 	def clusterize(klass, items, k, similarity_function, iterations):
-		centroids = sample(items, k)
+		centroids = random.sample(items, k)
 		
 		for i in xrange(iterations):
 			clusters = [[] for i in xrange(k)]
