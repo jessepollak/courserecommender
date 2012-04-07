@@ -71,16 +71,21 @@ function select_course(course) {
     }
     selected_courses.push(course);
     $("#autocomplete").append('<tr id="' + course.id + '"><td>' +
-        course.name+'</td></tr>');
+        course.name+'</td>' +
+        '<td><input type="radio" value="-2" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="-1" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="0" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="1" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="2" name="course_' + course.id +'"></td>' +
+        '</tr>');
     deletebtn("#" + course.id);
-    $("form#course_ratings").append('<input id="'+ course.id + '" type="hidden" name="'+ course.id + '" value="0">');
     $("#" + course.id + " .remove").click(function (evt) {
         remove_course(course_for_id(this.parentNode.parentNode.parentNode.id));
     });
 }
 
 function deletebtn(somedivid) {
-	var target = $(somedivid).append("<td class='removebox'></td>").find("td")[1];
+	var target = $(somedivid).append("<td class='removebox'></td>").find("td.removebox")[0];
 	var canvas = Raphael($("body"), 20,20);
 	target.appendChild(canvas.canvas);
 	var circ = canvas.ellipse(10,10,10,10).attr({fill:"rgb(50,52,50)", "stroke-width": 0,cursor: "pointer"});
