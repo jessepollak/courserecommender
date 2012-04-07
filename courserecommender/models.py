@@ -30,13 +30,23 @@ class Ranking(Base):
 
 	id = Column(Integer, primary_key=True)
 	user_id = Column(Integer, ForeignKey('users.id'))
+	course_id = Column(Integer, ForeignKey('courses.id'))
+	value = Column(Integer)
 	user = relationship("User", backref=backref("rankings"))
 
 class RankingStore:
 	def __init__(self, session):
 		self.session = session
+	def save(self, ranking):
+		self.session.add(ranking)
+		self.session.commit()
 	def find_all_by_user_ids(self, user_ids):
 		return self.session.query(Ranking).filter(Ranking.user_id.in_(user_ids)).all()
+		
+class Course(Base):
+	__tablename__ = 'courses'
+
+	id = Column(Integer, primary_key=True)
 
 """
 class CourseStore:
