@@ -2,11 +2,6 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        {% if name %}
-            <title>Hello {{ name }}!</title>
-        {% else %}
-            <title>Course Recommender</title>
-        {% endif %}
 
         <link rel="stylesheet" href="../static/css/course.css" type="text/css" media="screen">
 
@@ -18,10 +13,12 @@
 
     </head>
     <body>
-
-
-        <div id="canvas">
+        <div id="container">
+            <form id="userinput">
+                <input type="text"/>
+            </form>
         </div>
+        
     </body>
       
 </html>
