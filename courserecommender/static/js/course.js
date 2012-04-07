@@ -48,4 +48,14 @@ $("document").ready( function () {
 	for (var i=0; i<database.length;i++){
 		console.log(database[i]+"");
 	}
+	
+	autocompletions = [];
+	for (var i = 0; i < database.length; i++) {
+	    autocompletions.push(database[i].name);
+	}
+	
+	$("#userinput input[type='text']").autocomplete({
+	    source: autocompletions,
+	    search: function (event, ui) { console.log("Searching..."); }
+	});
 })
