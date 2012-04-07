@@ -95,6 +95,8 @@ class Course(Base, Store):
 
 	id = Column(Integer, primary_key=True)
 	name = Column(String)
+	code = Column(String)
+	instructor = Column(String)
 
 class Cluster(Base, Store):
 	__tablename__ = 'clusters'
