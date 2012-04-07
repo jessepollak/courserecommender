@@ -14,6 +14,8 @@ function course(code, name, instructor) {
     };
 }
 
+var deletebox = '<svg height="20" version="1.1" width="20" xmlns="http://www.w3.org/2000/svg" style="overflow-x: hidden; overflow-y: hidden; position: absolute; top: 20px; "><ellipse cx="10" cy="10" rx="10" ry="10" fill="#323432" stroke="#000" style="cursor: pointer; " stroke-width="0" class="remove"></ellipse><path style="cursor: pointer; " fill="#fefefe" stroke="#000000" d="M8.5,8.5V3.5H11.5V8.5H16.5V11.5H11.5V16.5H8.5V11.5H3.5V8.5Z" stroke-width="0" transform="matrix(0.7071,0.7071,-0.7071,0.7071,10,-4.1421)" class="remove"></path></svg>'
+var star = '<svg class="staricon" height="20px" width="20px"><path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: default; stroke-width: 0;" fill="rgb(60,62,60)"  d="M9,8l0,0,3,-8l0,0,3,8h7l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" stroke-opacity="1"></path></svg>';
 var database = [
 new course("ENGL 101","A brief history of American Classics","Prof Byzarre"),
 new course("PSYCH 22","The Brain : an introspection","Mr Sandman"),
@@ -35,16 +37,6 @@ new course("CHEM 51","Making Nitro","Prof Swarthmore"),
 new course("PHYS 128","Arduinos & Piano Playing","Prof Raphie"),
 new course("ART 15","The grand use of Raphael JS in the world of Modern Art: a review","Dr. M. Maltese")
 ];
-
-$(".staricon").live('mouseover', function() {
-	var starvalue = $(this).attr('strength');
-	console.log($(this).parent().children().length);
-	for (var i =0;i<$(this).parent().children().length;i++){
-			console.log($(this).parent().children()[i].type == "path");
-		}
-		
-		// $(this).parent().children()[i].css({fill:"#ea4c89"})
-	});
 
 var selected_courses = [];
 
@@ -70,23 +62,24 @@ function select_course(course) {
         }
     }
     selected_courses.push(course);
+    // $("#autocomplete").append('<tr id="' + id_for_course(course) + '"><td class="coursecode">' +
+    //     '<strong>' + course.code + "</strong>" + "</td><td>" +
+    //     course.name+'<font class="professor">' + "\t"+course.instructor + '</font></td></tr>');
+    // $("#"+id_for_course(course)).append("<td class='deletebox'>"+deletebox+"</td>");
+    
+    // $("#"+id_for_course(course)+" .remove").click(function (evt) {
     $("#autocomplete").append('<tr id="' + course.id + '"><td>' +
-        course.name+'</td></tr>');
+        course.name+'</td>' +
+        '<td><input type="radio" value="-2" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="-1" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="0" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="1" name="course_' + course.id +'"></td>' +
+        '<td><input type="radio" value="2" name="course_' + course.id +'"></td>' +
+        '</tr>');
     deletebtn("#" + course.id);
-    $("form#course_ratings").append('<input id="'+ course.id + '" type="hidden" name="'+ course.id + '" value="0">');
     $("#" + course.id + " .remove").click(function (evt) {
         remove_course(course_for_id(this.parentNode.parentNode.parentNode.id));
     });
-}
-
-function deletebtn(somedivid) {
-	var target = $(somedivid).append("<td class='removebox'></td>").find("td")[1];
-	var canvas = Raphael($("body"), 20,20);
-	target.appendChild(canvas.canvas);
-	var circ = canvas.ellipse(10,10,10,10).attr({fill:"rgb(50,52,50)", "stroke-width": 0,cursor: "pointer"});
-	var icon = canvas.path("m"+(8.5)+","+(8.5)+"v-5h3v5h5v3h-5v5h-3v-5h-5v-3z").attr({fill:"rgb(254,254,254)", "stroke-width": 0,cursor: "pointer"}).transform("r45");
-	icon[0].setAttribute("class","remove");
-	circ[0].setAttribute("class","remove");
 }
 
 $("document").ready( function () {

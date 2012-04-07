@@ -1,62 +1,13 @@
 {% extends "base.html" %}
 {% block main_content %}
-    <form id="course_ratings" action="/insert" method="POST" style="display: none;">
-    </form>
-    <form id="userinput">
+    <div id="userinput">
         <input type="text" placeholder="Enter a course..."/>
-    </form>
-    
-    <!-- svg width="102" height="24px">
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: default; stroke-width: 0;" fill="rgb(2,4,2)"  d="M8,11l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(60,62,60)" fillalternate="#ea4c89"  d="M8,10l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" class="staricon" strength="0" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: default; stroke-width: 0;" fill="rgb(2,4,2)" d="M28,11l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" stroke-width="1.5" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(60,62,60)" fillalternate="#ea4c89" d="M28,10l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" class="staricon" stroke-width="1.5" strength="2" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: default; stroke-width: 0;" fill="rgb(2,4,2)" d="M48,11l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" class="staricon" stroke-width="1.5" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(60,62,60)" fillalternate="#ea4c89" d="M48,10l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" class="staricon" stroke-width="1.5" strength="3"stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: default; stroke-width: 0;" fill="rgb(2,4,2)" d="M68,11l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" stroke-width="1.5" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(60,62,60)" fillalternate="#ea4c89" d="M68,10l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" class="staricon" stroke-width="1.5" strength="3"stroke-opacity="1"></path>
-d
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: default; stroke-width: 0;" fill="rgb(2,4,2)" d="M88,11l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" stroke-width="1.5" stroke-opacity="1"></path>
-
-    	<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(60,62,60)" fillalternate="#ea4c89" d="M88,10l0,0,4,-8l0,0,4,8h6l0,0,-6,4l0,0,2,8l0,0,-6,-6l0,0,-6,6l0,0,2,-8l0,0,-6,-4z" opacity="1" class="staricon" stroke-width="1.5" strength="4" stroke-opacity="1"></path>
-    	
-    	<defs>
-
-	      <linearGradient id="half" gradientTransform="rotate(90)">
-	        <stop offset="49%" stop-color="rgb(25,26,25)" />
-	        <stop offset="51%" stop-color="#ea4c89" />
-	      </linearGradient>
-
-	      <linearGradient id="quarter" gradientTransform="rotate(90)">
-	        <stop offset="74%" stop-color="rgb(25,26,25)" />
-	        <stop offset="76%" stop-color="#ea4c89" />
-	      </linearGradient>
-
-	      <linearGradient id="threequarter" gradientTransform="rotate(90)">
-	        <stop offset="24%" stop-color="rgb(25,26,25)" />
-	        <stop offset="26%" stop-color="#ea4c89" />
-	      </linearGradient>
-
-	    </defs>
-	</svg>
-
-	<svg width="26" height="26">
-
-		<ellipse style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(2,4,2)" fillalternate="#ea4c89" cx="13" cy="13" rx="13"ry="13"opacity="1" class="staricon" stroke-width="1.5" strength="4" stroke-opacity="1"></ellipse>
-		<path style="opacity: 1; fill-opacity: 1; stroke-opacity: 0; cursor: pointer; stroke-width: 0;" fill="rgb(254,254,254)" fillalternate="#ea4c89" d="M8,6l0,0,5,5l0,0,5,-5l0,0,2,2l0,0,-5,5l0,0,5,5l0,0,-2,2l0,0,-5,-5l0,0,-5,5l0,0,-2,-2l0,0,5,-5l0,0,-5,-5z" opacity="1" class="staricon" stroke-width="1.5" strength="4" stroke-opacity="1"></path>
-
-	</svg> -->
+    </div>
 	<div id="canvas">
 	</div>
+	<form id="course_ratings" action="/recommendations" method="POST">
     <table id="autocomplete">
-      <!-- <li><strong>MATH101 PO-01</strong> &ndash; Intro to Analysis</li> -->
+      <tr><th>Name</th><th>Sucked</th><th>Not good</th><th>Meh.</th><th>Good</th><th>Awesome</th><th>Remove?</th></tr>
     </table>
+  </form>
 {% endblock %}
