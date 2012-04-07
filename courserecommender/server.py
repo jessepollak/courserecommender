@@ -30,7 +30,7 @@ def courses():
 	print matches
 	course_data = []
 	for match in matches:
-	    course_data.append(match.name)
+	    course_data.append({"label": match.name, "value": match.id})
 	
 	return json.dumps(course_data)
 
