@@ -53,6 +53,10 @@ function remove_course(course) {
     $("#"+course.id).remove();
     $("#rating_"+course.id).remove();
     selected_courses.splice(selected_courses.indexOf(course), 1);
+    if (selected_courses.length == 0) {
+        $("#submit").hide();
+        $("#courseheader").hide();
+    }
 }
 
 function select_course(course) {
@@ -61,6 +65,12 @@ function select_course(course) {
             return false;
         }
     }
+    
+    if (selected_courses.length == 0 ) {
+        $("#submit").show();
+        $("#courseheader").show();
+    }
+    
     selected_courses.push(course);
     // $("#autocomplete").append('<tr id="' + id_for_course(course) + '"><td class="coursecode">' +
     //     '<strong>' + course.code + "</strong>" + "</td><td>" +
@@ -94,6 +104,14 @@ $("document").ready( function () {
 	        value: database[i]
         });
 	}
+	
+	$("#submit").hide();
+    $("#courseheader").hide();
+    $("#new_username").hide();
+    $("#submit").click(function () {
+        $("#new_username").show();
+        return false;
+    });
 	
 	$("#userinput input[type='text']").autocomplete({
 	    source: '/courses',
