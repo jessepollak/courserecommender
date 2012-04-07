@@ -3,6 +3,8 @@ from random import sample
 import math
 from models import Ranking, User		
 		
+
+
 def centroidify(cluster): 
 	cluster_size = len(cluster)
 	if cluster_size == 0:
@@ -56,4 +58,4 @@ def clusterize(items, k, similarity_function, iterations):
 			clusters[cluster_index].append(item)
 		centroids = [centroidify(cluster) for cluster in clusters]
 
-	return clusters
+	return zip(clusters, centroids)

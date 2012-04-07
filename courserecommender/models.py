@@ -55,3 +55,15 @@ class Cluster(Base, Store):
 
 	id = Column(Integer, primary_key=True)
 	centroid = Column(Text)
+
+	@classmethod
+	def make_clusters(klass):
+		clusters = cluster.clusterize(User.all(), 5, cluster.cos_similarity, 5)
+		session.execute("DELETE FROM 'clusters'")
+		for users, centroid in clusters:
+			c = Cluster()
+			c.set_centroid(centroid)
+			c.save()
+			for user in users:
+				user.cluster_id = c.id
+				user.save()
