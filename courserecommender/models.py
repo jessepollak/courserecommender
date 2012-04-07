@@ -1,5 +1,6 @@
 import flask
 from itertools import groupby
+import json
 import math
 import random
 from sqlalchemy import create_engine
@@ -132,17 +133,23 @@ class Course(Base, Store):
 			q = q.filter(Course.name.ilike('%' + word + '%'))
 		return q.all()
 
+class Centroid:
+	def __init__(self, rankings):
+		self.rankings = rankings
+
 class Cluster(Base, Store):
 	__tablename__ = 'clusters'
 
 	id = Column(Integer, primary_key=True)
 	centroid = Column(Text)
-	
+
 	def get_centroid(self):
-		return pickle.loads(str(self.centroid))
+		rankings = json.loads(self.centroid)
+		return Centroid(Ranking(course_id=r["course_id"], value=r["value"]) for r in rankings)
 		
-	def set_centroid(self, rankings):
-		self.centroid = pickle.dumps(self.centroid)
+	def set_centroid(self, user):
+		self.centroid = json.dumps([{"course_id": r.course_id, "value": r.value} for r in user.rankings])
+		print self.centroid
 	
 	@classmethod
 	def make_clusters(klass, k=3):
@@ -187,7 +194,7 @@ class Cluster(Base, Store):
 			average = sum(r.value for r in group) / float(cluster_size)
 			average_rankings.append(Ranking(course_id = course_id, value = average))
 				
-		return User(rankings = average_rankings)
+		return Centroid(average_rankings)
 		
 	@classmethod
 	def clusterize(klass, items, k, similarity_function, iterations):
