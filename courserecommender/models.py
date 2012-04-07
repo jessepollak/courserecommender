@@ -2,9 +2,10 @@ import flask
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, sessionmaker
+import pickle
 
 Base = declarative_base()
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
 
 def init(url):
 	engine = create_engine(url, echo=True)
@@ -28,6 +29,8 @@ class User(Base, Store):
 
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
+	cluster_id = Column(Integer)
+	cluster = relationship("Cluster", backref=backref("users"))
 
 	def __repr__(self):
 		return "<User id=%s, username=%s>" % (self.id, self.username)
@@ -50,4 +53,28 @@ class Course(Base, Store):
 
 	id = Column(Integer, primary_key=True)
 
+class Cluster(Base, Store):
+	__tablename__ = 'clusters'
+
+	id = Column(Integer, primary_key=True)
+	centroid = Column(Text)
 	
+	def get_centroid(self):
+		return pickle.loads(self.centroid)
+		
+	def set_centroid(self, rankings):
+		self.centroid = pickle.dumps(self.rankings)
+	
+	@classmethod
+	def add_user(klass, user):
+		clusters = klass.all()
+		centroids = [cluster.get_centroid() for cluster in clusters]
+		cluster_index, similarity = max(
+			enumerate(similarity_function(item, centroid) for centroid in centroids), 
+			key=lambda (index,similarity): similarity
+		)
+		best_cluster = clusters[cluster_index]
+		user.cluster_id = best_cluster.id
+		user.save()
+			
+		
