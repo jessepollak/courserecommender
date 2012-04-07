@@ -1,206 +1,55 @@
+/* @override http://127.0.0.1:5000/static/css/course.css */
 
-      body {
-      background: rgb(30,31,30);
-      }
-      
-      #chatHistory {
-        height:500px;
-        width:500px;
-        -webkit-appearance: caret;
-        resize: none;
-		background: rgb(25,26,25);
-		color: white;
-    	font: 14px Monaco;
-    	border: none;
-    	color: white;
-    	text-shadow: 0 -2px 0 #0F1619;
-    	line-height: 1.4;
-    	overflow-y: scroll;
-      }
-      
-      ::selection,::-moz-selection {
-  color: #fff;
-  color: rgba(255, 255, 255, 0.85);
-  background: #ea4c89;
+body {
+	background: rgb(30,31,30);
+	padding: 0px;
+	margin: 0px;
 }
 
-
-#webmaster {
-margin-top: 50px;
-margin-bottom: 50px;
-display: block;
-text-align: center;
-      font: 14px Lucida Grande, sans-serif;
-      color: rgb(200,210,200);
-      cursor: pointer;
+::selection,::-moz-selection {
+	color: #fff;
+	color: rgba(255, 255, 255, 0.85);
+	background: #ea4c89;
 }
-#webmaster a {
-display: inline-block;
-text-decoration: none;
-color: white;
+
+body > header, #container {
+	color: white;
+	width: 70%;
+	margin: 0 auto;
 }
-      /*.timeicon{
-      font: 10px Lucida Grande, sans-serif;
-      display: inline;
-      padding: 4px 8px;
-      -moz-border-radius: 8px 8px 8px 8px;
--webkit-border-radius: 8px 8px 8px 8px;
--khtml-border-radius:  8px 8px 8px 8px;
-border-radius: 8px 8px 8px 8px;
-      color: rgb(50,50,50);
-      padding: 2px 4px;
-      background: rgb(144,143,140);
-	background: -moz-linear-gradient(top, rgba(144,143,140,1) 0%, rgba(109,109,107,1) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(144,143,140,1)), color-stop(100%,rgba(109,109,107,1)));
-	background: -webkit-linear-gradient(top, rgba(144,143,140,1) 0%,rgba(109,109,107,1) 100%);
-	background: -o-linear-gradient(top, rgba(144,143,140,1) 0%,rgba(109,109,107,1) 100%);
-	background: -ms-linear-gradient(top, rgba(144,143,140,1) 0%,rgba(109,109,107,1) 100%);
-	background: linear-gradient(top, rgba(144,143,140,1) 0%,rgba(109,109,107,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#908f8c', endColorstr='#6d6d6b',GradientType=0 );
-      text-shadow: 0 1px 0 rgb(150,150,150);
-      margin-right: 10px;
-      }*/
-      #chatHistory a, .timeicon {
-      font: 10px Lucida Grande, sans-serif;
-      color: rgb(200,210,200);
-      cursor: pointer;
-      }
-      
-      
-      input[type="text"] {
-        width: 450px;
-      }
-      #chatArea {
-        width:600px;
-        margin: 10px auto;
-        
-      }
-      
-      #chatArea span.pin{
-      background: url(location_pin.png) no-repeat;
-      width: 10px;
-      display:inline-block;
-      background-size:contain;
-      height: 17px;
-      vertical-align: middle;
-      
-      margin-left: 4px;
-      margin-right: 4px;
-      cursor: pointer;
-      }
-	#usersbox {
-	position: fixed;
-	right: 0px;
-	top: 0px;
-	width: 200px;
-	margin-left: 0px;
-	overflow-y: hide;
-	overflow-x: scroll;
-	height: 100%;
-	background: #191A19;
-	-webkit-transition: all 500ms ease-in-out;
-	-moz-transition: all 500ms ease-in-out;
-	-o-transition: all 500ms ease-in-out;
-	}
-	
-	
-    #usersbox img{
-    margin: 0px;
-    padding: 0px;
-    z-index: 200;
-    width: 200px;
-    border: none;
-    }
-      input.submissions {
-      display: inline;
-      margin-top: 20px;
-      margin-right: 20px;
-      margin-left: 0px;
-      padding: 4px 8px;
-      width: auto;
-      border: none;
-      height: auto;
-      background: rgb(25,26,25);
-      border-bottom: 2px solid rgb(15,16,15);
-      font: 14px Monaco;
-      color: white;
-      text-shadow: 0 -2px 0 #0F1619;
-      }
-      
-      input.submissions:hover {
-      background: gray;
-      border-bottom: 2px solid white;
-      cursor: pointer;
-      }
-      
-      .submissions.live, .submissions.live:hover {
-      background: gray;
-      -webkit-appearance: caret;
-      width: 450px;
-      margin-right: 0px;
-      padding: none;
-      cursor: text;
-      color: white;
-      }
-      
-      .locationicon {
-      margin: 0px;
-      position: relative;
-      width: 200px;
-      height: 50px;
-      }
-      
 
-      @media (max-width: 837px) {
+body > header {
+	margin: 1em auto;
+	text-shadow: #000 0 0 3px;
+}
 
-	  #usersbox {
-	  opacity: 0;
-	  }
-  	  }
-	  @media handheld, only screen and (max-width: 481px){
+body > header h1 {
+	margin: 0;
+}
 
-	  body {
-	  margin: 0px;
-	  }
-	  #chatArea {
-	  position: fixed;
-	  	top: 0px;
-	  	left: 0px;
-        width:100% ;
-        margin: 0px;
-        height:125px;
-        margin: 0px;
-        overflow: hide;
-        padding: 0px;
-      }
-      #chatHistory {
-      position: fixed;
-      left: 0px;
-      width: 100%;
-      margin: 0px;
-      height:125px;
-      margin: 0px;
-      padding: 0px;
-      }
-      #chatHistory a {
-      padding: 2px 3px;
-        -moz-border-radius: 3px 3px 3px 3px;
--webkit-border-radius: 3px 3px 3px 3px;
--khtml-border-radius:  3px 3px 3px 3px;
-border-radius: 3px 3px 3px 3px;
-      }
-      
-      input[type=submit]{
-      opacity: 0;
-      margin: 0px;
-      display: none;
-      }
-      input[type=text]{
-      position: fixed;
-      width: 100%;
-      top: 125px;
-      margin: 0px;
-      padding: 0px;
-	  z-index: 2000;
-      }
-      /*}
+body > header h2 {
+	margin: 0;
+}
+
+form#userinput {
+	padding: 1em;
+}
+
+form#userinput > input[type="text"] {
+	background: rgb(245,246,245);
+	width: 100%;
+	margin: 0;
+	font-size: 36px;
+	display: block;
+}
+
+#container {
+	background: rgb(25,26,25);
+}
+
+@media handheld, only screen and (max-width: 820px){
+#container {
+  width: 100%;
+}
+
+}
