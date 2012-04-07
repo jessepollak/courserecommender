@@ -17,7 +17,6 @@ def centroidify(cluster):
 		average_rankings.append(Ranking(course_id = course_id, value = average))
 			
 	return User(rankings = average_rankings)
-		
 				
 def cos_similarity(a, b):
 	a_rankings = a.rankings
