@@ -167,7 +167,7 @@ class Cluster(Base, Store):
 			return Cluster()
 		centroids = [cluster.get_centroid() for cluster in clusters]
 		cluster_index, similarity = max(
-			enumerate(User.similarity(item, centroid) for centroid in centroids), 
+			enumerate(User.similarity(user, centroid) for centroid in centroids), 
 			key=lambda (index,similarity): similarity
 		)
 		return clusters[cluster_index]
