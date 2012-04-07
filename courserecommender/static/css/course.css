@@ -31,7 +31,7 @@ body > header h2 {
 	margin: 0;
 }
 
-form#userinput {
+form#userinput, #autocomplete {
 	padding: 1em;
 }
 
@@ -45,6 +45,14 @@ form#userinput > input[type="text"] {
 
 #container {
 	background: rgb(25,26,25);
+}
+
+#autocomplete {
+	list-style-type: none;
+}
+
+#autocomplete .match {
+	background: #ea4c89;
 }
 
 @media handheld, only screen and (max-width: 820px){
