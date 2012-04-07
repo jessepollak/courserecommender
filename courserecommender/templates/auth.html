@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block main_content %}
+<form action="/login" method="POST" id="login">
+  <p>To save your courses, provide an email address.</p>
+  <ul>
+    <li><input type="text" name="username" placeholder="ces02006"></li>
+    <li><input type="submit" value="Log in"></li>
+  </ul>
+</form>
+{% endblock %}
