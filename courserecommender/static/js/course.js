@@ -24,16 +24,16 @@ new course("ENGL 250","The Great Minds of Jenzabar : a review by Joseph L.","Jos
 new course("CS 12","How to simple things in Python without Rails","Dr. M. Maltese"),
 new course("ENGL 55","A brief history of American Classics","Prof Byzarre"),
 new course("ENG 101","Material structures in outer space","Prof Orbit"),
-new course("MATH 670","Complexifications","Prof Slitherin"),
+new course("MATH 570","Complexifications","Prof Slitherin"),
 new course("ID 1","Seminars by Seminaries","Prof Closing"),
 new course("ANTHRO 250","The indigeneous cultures of Tanzania","Dr. Jones"),
 new course("CS 909","API Design","Dr. M. Maltese"),
 new course("MEDIA 99","ESCAPING the usual GOTCHAS","Bruce Wayne"),
 new course("HIST 150","From Randomness to Importations","Prof Jesse"),
-new course("BIO 106","Friction between ambiguous cellular bodies","Prof Synecdoche"),
+new course("BIO 105","Friction between ambiguous cellular bodies","Prof Synecdoche"),
 new course("CHEM 51","Making Nitro","Prof Swarthmore"),
 new course("PHYS 128","Arduinos & Piano Playing","Prof Raphie"),
-new course("ART 16","The grand use of Raphael JS in the world of Modern Art: a review","Dr. M. Maltese")
+new course("ART 15","The grand use of Raphael JS in the world of Modern Art: a review","Dr. M. Maltese")
 ];
 
 $(".staricon").live('mouseover', function() {
@@ -75,11 +75,22 @@ function select_course(course) {
     selected_courses.push(course);
     $("#autocomplete").append('<li id="' + id_for_course(course) + '">' +
         '<strong>' + course.code + "</strong> &ndash; " + 
-        course.name + '<span class="remove">x</span></li>');
+        course.name);
+    deletebtn("#"+id_for_course(course));
     
     $("#"+id_for_course(course)+" .remove").click(function (evt) {
-        remove_course(course_for_id(this.parentNode.id));
+        remove_course(course_for_id(this.parentNode.parentNode.parentNode.id));
     });
+}
+
+function deletebtn(somedivid) {
+	var target = $(somedivid).append("<div class='removebox'></div>").find("div")[0];
+	var canvas = Raphael(target,20,20);
+	target.appendChild(canvas.canvas);
+	var circ = canvas.ellipse(10,10,10,10).attr({fill:"rgb(50,52,50)", "stroke-width": 0,cursor: "pointer"});
+	var icon = canvas.path("m"+(8.5)+","+(8.5)+"v-5h3v5h5v3h-5v5h-3v-5h-5v-3z").attr({fill:"rgb(254,254,254)", "stroke-width": 0,cursor: "pointer"}).transform("r45");
+	icon[0].setAttribute("class","remove");
+	circ[0].setAttribute("class","remove");
 }
 
 $("document").ready( function () {
@@ -90,7 +101,7 @@ $("document").ready( function () {
 	autocompletions = [];
 	for (var i = 0; i < database.length; i++) {
 	    autocompletions.push({
-	        label: database[i].code + ' - ' + database[i].name,
+	        label: database[i].code + ' - ' + database[i].name + ' - ' + database[i].instructor,
 	        value: database[i]
         });
 	}
