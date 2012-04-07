@@ -75,10 +75,10 @@ function select_course(course) {
         '<td><input type="radio" value="0" name="course_' + course.id +'"></td>' +
         '<td><input type="radio" value="1" name="course_' + course.id +'"></td>' +
         '<td><input type="radio" value="2" name="course_' + course.id +'"></td>' +
+        '<td><span class="remove">X</span></td>' +
         '</tr>');
-    deletebtn("#" + course.id);
     $("#" + course.id + " .remove").click(function (evt) {
-        remove_course(course_for_id(this.parentNode.parentNode.parentNode.id));
+        remove_course(course_for_id(this.parentNode.parentNode.id));
     });
 }
 
