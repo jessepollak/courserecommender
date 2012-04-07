@@ -63,7 +63,7 @@ class User(Base, Store):
 
 	@classmethod
 	def find_all_by_username(klass, username):
-		return self.session().query(User).filter(User.username==username).all()
+		return klass.session().query(User).filter(User.username==username).all()
 
 	@classmethod
 	def similarity(klass, a, b):
