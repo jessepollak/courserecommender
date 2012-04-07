@@ -10,7 +10,6 @@ import models
 app = Flask(__name__)
 db = models.init(os.environ.get("DATABASE_URL", "sqlite:///development.sqlite3"))
 
-
 @app.before_request
 def before_request():
 	g.db = db()
