@@ -8,5 +8,4 @@ session = courserecommender.server.db()
 from courserecommender.models import *
 
 Store._session = session
-
-print User.all()
+Base.metadata.create_all(session.get_bind())
