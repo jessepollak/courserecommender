@@ -28,17 +28,12 @@ def courses():
 	match_with = request.args.get('term', None)
 	if not match_with:
 	    return json.dumps([])
-	matches = g.db.query(models.Course).filter(models.Course.name.like(match_with))
+	matches = g.db.query(models.Course).filter(
+	    models.Course.name.like('%' + match_with + '%')).all()
+	print matches
 	course_data = []
 	for match in matches:
-	    course_data.append({
-	        'label': ' '.join(match.code, match.name, match.instructor),
-	        'value': {
-	            'name': match.name,
-	            'instructor': match.instructor,
-	            'code': match.code,
-	        }
-	    })
+	    course_data.append(match.name)
 	
 	return json.dumps(course_data)
 
