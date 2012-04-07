@@ -42,6 +42,9 @@ class User(Base, Store):
 		super(User, self).save()
 
 	def recommended_courses(self):
+		if not self.cluster:
+			return []
+
 		users_in_cluster = self.cluster.users[:]
 		users_in_cluster.remove(self)
 		random_users = random.sample(users_in_cluster, min(5, len(users_in_cluster)))

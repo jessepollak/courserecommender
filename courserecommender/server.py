@@ -1,6 +1,7 @@
 import flask, json
 from flask import Flask, g, render_template, request, session, redirect, url_for
 import itertools
+import re
 import os
 
 import database
@@ -39,19 +40,22 @@ def homepage():
 
 @app.route('/recommendations/<username>')
 def recommendations_for_user(username):
-	user = models.User.all()[0]
+	user = models.User.find_by_username(username)
 	return render_template('recommendations.html', recommendations=user.recommended_courses())
 
 @app.route('/recommendations', methods=['POST'])
 def recommendations():
 	user = models.User.find_by_username(request.form['username'])
-	if user:
-		# Add/update rankings
-		pass
-	else:
-		# Create user, add rankings
-		pass
-	return redirect("/recommendations/username")
+	if not user:
+		user = models.User(username = request.form['username'])
+		user.save()
+	for key, value in request.form.items():
+		m = re.match("course_(\d+)", key)
+		if m:
+			course_id = m.groups()[0]
+			r = models.Ranking(course_id=course_id, user_id=user.id, value=value)
+			r.save()
+	return redirect("/recommendations/%s" % user.username)
 		
 
 @app.route('/logout')
