@@ -37,12 +37,14 @@ new course("ART 16","The grand use of Raphael JS in the world of Modern Art: a r
 ];
 
 $(".staricon").live('mouseover', function() {
-	var pastfill = $(this).attr('fill');
-	$(this).css({'fill':$(this).attr('fillalternate')});
-	$(".staricon").live('mouseout', function() {
-		$(this).css({'fill':pastfill});
+	var starvalue = $(this).attr('strength');
+	console.log($(this).parent().children().length);
+	for (var i =0;i<$(this).parent().children().length;i++){
+			console.log($(this).parent().children()[i].type == "path");
+		}
+		
+		// $(this).parent().children()[i].css({fill:"#ea4c89"})
 	});
-});
 
 var selected_courses = [];
 
