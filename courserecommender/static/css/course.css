@@ -75,6 +75,16 @@ div#userinput > input[type="text"] {
 	width: 100px;
 }
 
+#autocomplete td.scores{
+	width: 125px;
+	padding-left: 0px;
+}
+
+#autocomplete td.deletebox{
+	width: 20px;
+	padding-left: 0px;
+}
+
 #autocomplete .professor {
 	opacity: 0;
 	color: rgb(166,166,166);
