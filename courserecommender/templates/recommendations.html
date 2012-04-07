@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block main_content %}
+
+<ul>
+	{% for course in recommendations %}
+		<li>{{ course.name }}</li>
+	{% endfor %}
+</ul>
+
+{% endblock %}

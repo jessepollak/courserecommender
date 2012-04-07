@@ -19,15 +19,6 @@ def teardown_request(exception=None):
 	if hasattr(g, 'db'):
 		g.db.close()
 
-@app.route("/store_recs")
-def store_recs():
-    recs = []
-    for key, value in request.form.values():
-        recs.append(int(value))
-    
-    print recs
-    return ''
-
 @app.route("/courses")
 def courses():
 	match_with = request.args.get('term', None)
@@ -46,18 +37,22 @@ def courses():
 def homepage():
     return render_template('homepage.html')
 
-@app.route('/auth', methods=['GET', 'POST'])
-def auth():
-    if request.method == "POST":
-        print models.User.find_all_by_username(request.form['username'])
-        user = len(models.User.find_all_by_username(request.form['username']))
-        if not user:
-            new_user = models.User(username=request.form['username'])
-            new_user.save()
-        session['username'] = request.form['username']
-        return redirect('/')
-    else:
-        return render_template('auth.html', auth_in_progress=True)
+@app.route('/recommendations/<username>')
+def recommendations_for_user(username):
+	user = models.User.all()[0]
+	return render_template('recommendations.html', recommendations=user.recommended_courses())
+
+@app.route('/recommendations', methods='POST')
+def recommendations():
+	user = models.User.find_by_username(request.form['username'])
+	if user:
+		# Add/update rankings
+		pass
+	else:
+		# Create user, add rankings
+		pass
+	return redirect("/recommendations/")
+		
 
 @app.route('/logout')
 def logout():

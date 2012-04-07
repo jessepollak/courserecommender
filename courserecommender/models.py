@@ -62,6 +62,14 @@ class User(Base, Store):
 		return self.__class__.session().query(Course).join("rankings", "user").filter(User.id == self.id).filter(Ranking.value > 0).all()
 
 	@classmethod
+	def find_by_username(klass, username):
+		all = klass.find_all_by_username(username)
+		if len(all) > 0:
+			return all[0]
+		else:
+			return None
+
+	@classmethod
 	def find_all_by_username(klass, username):
 		return klass.session().query(User).filter(User.username==username).all()
 
