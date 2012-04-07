@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block main_content %}
 
-<ul>
+<h1>Consider the following:</h1>
+
+<ul class="biglist">
 	{% for course in recommendations %}
 		<li>{{ course.name }}</li>
 	{% endfor %}
