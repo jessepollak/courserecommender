@@ -1,6 +1,5 @@
 import flask, json
 from flask import Flask, g, render_template, request, session, redirect, url_for
-from flaskext.sqlalchemy import SQLAlchemy
 import itertools
 import os
 
