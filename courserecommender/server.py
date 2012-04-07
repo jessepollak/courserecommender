@@ -42,7 +42,7 @@ def recommendations_for_user(username):
 	user = models.User.all()[0]
 	return render_template('recommendations.html', recommendations=user.recommended_courses())
 
-@app.route('/recommendations', methods='POST')
+@app.route('/recommendations', methods=['POST'])
 def recommendations():
 	user = models.User.find_by_username(request.form['username'])
 	if user:
@@ -51,7 +51,7 @@ def recommendations():
 	else:
 		# Create user, add rankings
 		pass
-	return redirect("/recommendations/")
+	return redirect("/recommendations/username")
 		
 
 @app.route('/logout')
