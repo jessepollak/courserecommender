@@ -2,7 +2,7 @@
 // │ JAVASCRIPT FOR COURSE RECOMMENDER SITE                             │ \\
 // ├────────────────────────────────────────────────────────────────────┤ \\
 // │ THE NEURO LOUNGE TEAM                     						    │ \\
-// │ Jesse, Joseph, Joseph & Michael                                    │ \\
+// │ Jesse, Joseph, Jonathan & Michael                                  │ \\
 // └────────────────────────────────────────────────────────────────────┘ \\
 
 function course(code, name, instructor) {
@@ -38,7 +38,7 @@ new course("ART 16","The grand use of Raphael JS in the world of Modern Art: a r
 
 $(".staricon").live('mouseover', function() {
 	var pastfill = $(this).attr('fill');
-	$(this).css({'fill':'rgb(200,200,250)'});
+	$(this).css({'fill':$(this).attr('fillalternate')});
 	$(".staricon").live('mouseout', function() {
 		$(this).css({'fill':pastfill});
 	});
