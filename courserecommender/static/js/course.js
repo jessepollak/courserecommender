@@ -10,7 +10,7 @@ function course(code, name, instructor) {
 	this.name       = name 		 || "Unknown"    ;
 	this.instructor = instructor || "Staff"      ;
     this.toString = function () {
-    	return "("+this.code+", "+this.name+", "+this.instructor+")";   
+    	return this.code+" - "+this.name;   
     };
 }
 
@@ -37,12 +37,50 @@ new course("ART 16","The grand use of Raphael JS in the world of Modern Art: a r
 ];
 
 $(".staricon").live('mouseover', function() {
-	var pastfill = $(this).attr('fill');
-	$(this).css({'fill':$(this).attr('fillalternate')});
-	$(".staricon").live('mouseout', function() {
-		$(this).css({'fill':pastfill});
+	var starvalue = $(this).attr('strength');
+	console.log($(this).parent().children().length);
+	for (var i =0;i<$(this).parent().children().length;i++){
+			console.log($(this).parent().children()[i].type == "path");
+		}
+		
+		// $(this).parent().children()[i].css({fill:"#ea4c89"})
 	});
-});
+
+var selected_courses = [];
+
+function id_for_course(course) {
+    return course.code.replace(/\s/g, '_');
+}
+
+function course_for_id(id) {
+    for (var i = 0; i < selected_courses.length; i++) {
+        if(id_for_course(selected_courses[i]) == id) {
+            return selected_courses[i];
+        }
+    }
+    return false; // if no selected course matches
+}
+
+function remove_course(course) {
+    $("#"+id_for_course(course)).remove();
+    selected_courses.splice(selected_courses.indexOf(course), 1);
+}
+
+function select_course(course) {
+    for (var i = 0; i < selected_courses.length; i++) {
+        if(selected_courses[i].code == course.code) {
+            return false;
+        }
+    }
+    selected_courses.push(course);
+    $("#autocomplete").append('<li id="' + id_for_course(course) + '">' +
+        '<strong>' + course.code + "</strong> &ndash; " + 
+        course.name + '<span class="remove">x</span></li>');
+    
+    $("#"+id_for_course(course)+" .remove").click(function (evt) {
+        remove_course(course_for_id(this.parentNode.id));
+    });
+}
 
 $("document").ready( function () {
 	for (var i=0; i<database.length;i++){
@@ -51,11 +89,21 @@ $("document").ready( function () {
 	
 	autocompletions = [];
 	for (var i = 0; i < database.length; i++) {
-	    autocompletions.push(database[i].name);
+	    autocompletions.push({
+	        label: database[i].code + ' - ' + database[i].name,
+	        value: database[i]
+        });
 	}
 	
 	$("#userinput input[type='text']").autocomplete({
 	    source: autocompletions,
-	    search: function (event, ui) { console.log("Searching..."); }
+	    autoFocus: true,
+	    search: function (event, ui) { console.log("Searching..."); },
+	    select: function (event, ui) {
+	        var course =  ui.item.value;
+	        select_course(course);
+	        $("#userinput input").val('');
+	        return false;
+	    }
 	});
 })
