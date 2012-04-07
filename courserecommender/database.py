@@ -25,6 +25,11 @@ class SqliteConfig:
 	def connection(self):
 		return sqlite3.connect(self.path)
 
+	def insert(self, c, table_name, pk, values):
+		values_template = ",".join(["?"] * len(values))
+		c.execute("INSERT INTO '%s' VALUES (%s)" % (table_name, values_template), values)
+		return c.lastrowid
+
 class PostgresConfig:
 	def __init__(self, url):
 		self.opts = {
@@ -36,6 +41,12 @@ class PostgresConfig:
 		}
 	def connection(self):
 		return psycopg2.connect(**self.opts)
+	def insert(self, c, table_name, pk, values):
+		values_template = ",".join(["?"] * len(values))
+		return c.execute(
+			"INSERT INTO '%s' VALUES (%s) RETURNING '%s'" % (table_name, values_template, pk),
+			values
+		).fetchone()[0]
 
 def get_configuration(url):
 	parsed_url = urlparse(url)

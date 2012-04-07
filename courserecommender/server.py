@@ -13,6 +13,7 @@ db = database.get_configuration(os.environ.get("DATABASE_URL", "sqlite:developme
 @app.before_request
 def before_request():
 	g.db = db.connection()
+	g.strategy = db
 
 @app.teardown_request
 def teardown_request(exception=None):
@@ -21,7 +22,7 @@ def teardown_request(exception=None):
 
 @app.route("/courses")
 def courses_index():
-	course_store = CourseStore(g.db)
+	course_store = CourseStore(g.db, g.strategy)
 	return repr(course_store.all())
 
 @app.route('/')

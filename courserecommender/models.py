@@ -1,8 +1,9 @@
 from contextlib import closing
 
 class Store:
-	def __init__(self, connection):
+	def __init__(self, connection, strategy):
 		self.connection = connection
+		self.strategy = strategy
 	def cursor(self):
 		return closing(self.connection.cursor())
 	def commit(self):
@@ -32,11 +33,8 @@ class Store:
 		pk = self.model.fields[0]
 		with self.cursor() as c:
 			for i in new:
-				values_template = ",".join(["?"] * len(self.model.fields))
-				c.execute(
-					"INSERT INTO '%s' VALUES (%s)" % (self.table_name, values_template),
-					i.to_list()
-				)
+				rowid = self.strategy.insert(c, self.table_name, pk, i.to_list())
+				setattr(i, pk, rowid)
 			for i in old:
 				set_template = ", ".join("'%s'=?" % f for f in self.model.fields)
 				values = i.to_list() + [getattr(i, pk)]
