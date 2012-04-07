@@ -1,7 +1,7 @@
 import flask
 from itertools import groupby
 import math
-from random import sample
+import random
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, sessionmaker
@@ -35,13 +35,35 @@ class User(Base, Store):
 	cluster_id = Column(Integer, ForeignKey("clusters.id"))
 	cluster = relationship("Cluster", backref=backref("users"))
 
-	def get_similar_users(self):
-		users_in_cluster = self.cluster.users
+	def save(self):
+		if self.cluster_id == None:
+			cluster = Cluster.cluster_for_user(self)
+			self.cluster_id = cluster.id
+		super(User, self).save()
+
+	def recommended_courses(self):
+		users_in_cluster = self.cluster.users[:]
 		users_in_cluster.remove(self)
-		random_users = random.sample(users_in_cluster, min(10, len(users_in_cluster)))
+		random_users = random.sample(users_in_cluster, min(5, len(users_in_cluster)))
 
-		u.rankingsrandom_users
+		good_courses = [u.good_courses() for u in random_users]
+		course_recommendations = []
+		for courses in good_courses:
+			for course in courses:
+				if not course in self.courses() and not course in course_recommendations:
+					course_recommendations.append(course)
+		
+		return random.sample(course_recommendations, min(5, len(course_recommendations)))
 
+	def courses(self):
+		return self.__class__.session().query(Course).join("rankings", "user").filter(User.id == self.id).all()
+
+	def good_courses(self):
+		return self.__class__.session().query(Course).join("rankings", "user").filter(User.id == self.id).filter(Ranking.value > 0).all()
+
+	@classmethod
+	def find_all_by_username(klass, username):
+		return self.session().query(User).filter(User.username==username).all()
 
 	@classmethod
 	def similarity(klass, a, b):
@@ -84,7 +106,7 @@ class Ranking(Base, Store):
 	course_id = Column(Integer, ForeignKey('courses.id'))
 	value = Column(Integer)
 	user = relationship("User", backref=backref("rankings"))
-	course = relationship("Course", backref=backref("course"))
+	course = relationship("Course", backref=backref("rankings"))
 
 	@classmethod
 	def find_all_by_user_ids(klass, user_ids):
@@ -124,16 +146,17 @@ class Cluster(Base, Store):
 				user.save()
 
 	@classmethod
-	def add_user(klass, user):
+	def cluster_for_user(klass, user):
 		clusters = klass.all()
+		if len(clusters) == 0:
+			return Cluster()
 		centroids = [cluster.get_centroid() for cluster in clusters]
 		cluster_index, similarity = max(
 			enumerate(User.similarity(item, centroid) for centroid in centroids), 
 			key=lambda (index,similarity): similarity
 		)
-		best_cluster = clusters[cluster_index]
-		user.cluster_id = best_cluster.id
-		user.save()
+		return clusters[cluster_index]
+		
 
 	@classmethod
 	def centroidify(klass, cluster): 
@@ -153,7 +176,7 @@ class Cluster(Base, Store):
 		
 	@classmethod
 	def clusterize(klass, items, k, similarity_function, iterations):
-		centroids = sample(items, k)
+		centroids = random.sample(items, k)
 		
 		for i in xrange(iterations):
 			clusters = [[] for i in xrange(k)]

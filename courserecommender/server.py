@@ -11,9 +11,6 @@ app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!j4mNLWX/,?RT'
 db = models.init(os.environ.get("DATABASE_URL", "sqlite:///development.sqlite3"))
 
-def _get_user():
-    return g.db.query(models.User).filter(models.User.username==request.form['username'])[0]
-
 @app.before_request
 def before_request():
 	g.db = db()
@@ -44,12 +41,11 @@ def homepage():
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
     if request.method == "POST":
-        print g.db.query(models.User).filter(models.User.username==request.form['username'])
-        user = g.db.query(models.User).filter(models.User.username==request.form['username']).count()
+        print models.User.find_all_by_username(request.form['username'])
+        user = len(models.User.find_all_by_username(request.form['username']))
         if not user:
             new_user = models.User(username=request.form['username'])
-            g.db.add(new_user)
-            g.db.commit()
+            new_user.save()
         session['username'] = request.form['username']
         return redirect('/')
     else:
