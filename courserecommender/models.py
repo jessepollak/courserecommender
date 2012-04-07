@@ -139,7 +139,7 @@ class Cluster(Base, Store):
 	centroid = Column(Text)
 	
 	def get_centroid(self):
-		return pickle.loads(self.centroid)
+		return pickle.loads(str(self.centroid))
 		
 	def set_centroid(self, rankings):
 		self.centroid = pickle.dumps(self.centroid)
