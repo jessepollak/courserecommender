@@ -11,3 +11,5 @@ Store._session = session
 
 k = int(sys.argv[1])
 Cluster.make_clusters(k)
+
+print [len(c.users) for c in Cluster.all()]
