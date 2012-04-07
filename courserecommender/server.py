@@ -45,7 +45,7 @@ def recommendations():
 	user = models.User.find_by_username(request.form['username'])
 	if not user:
 		user = models.User(username = request.form['username'])
-		cluster = models.Cluster.cluster_for_user(self)
+		cluster = models.Cluster.cluster_for_user(user)
 		self.cluster_id = cluster.id
 		user.save()
 	for key, value in request.form.items():
