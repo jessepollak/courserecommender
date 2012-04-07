@@ -8,12 +8,12 @@ import database
 import models
 
 app = Flask(__name__)
-db = database.get_configuration(os.environ.get("DATABASE_URL", "sqlite:development.sqlite3"))
+db = models.init(os.environ.get("DATABASE_URL", "sqlite:///development.sqlite3"))
+
 
 @app.before_request
 def before_request():
-	g.db = db.connection()
-	g.strategy = db
+	g.db = db()
 
 @app.teardown_request
 def teardown_request(exception=None):
@@ -22,7 +22,7 @@ def teardown_request(exception=None):
 
 @app.route("/courses")
 def courses_index():
-	course_store = CourseStore(g.db, g.strategy)
+	course_store = CourseStore(g.db)
 	return repr(course_store.all())
 
 @app.route('/')
