@@ -6,3 +6,4 @@ lib
 .DS_Store
 ._.DS_Store
 *.pyc
+*.sqlite3

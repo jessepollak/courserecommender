@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block main_content %}
+<form action="/auth" method="POST" id="login">
+  <p>Enter your email address to access your courses</p>
+  <ul>
+    <li><input type="text" name="username" placeholder="ces02006@mymail.pomona.edu"></li>
+    <li><input type="submit" value="Log in"></li>
+  </ul>
+</form>
+{% endblock %}
