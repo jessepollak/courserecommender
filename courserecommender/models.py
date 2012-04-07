@@ -153,7 +153,7 @@ class Cluster(Base, Store):
 	@classmethod
 	def make_clusters(klass):
 		clusters = Cluster.clusterize(User.all(), 5, User.similarity, 5)
-		klass.session().execute("DELETE FROM 'clusters'")
+		klass.session().query(Cluster).delete()
 		# TODO LATER: RACE CONDITIONS. What happens if a user is added right now?
 		for users, centroid in clusters:
 			c = Cluster()
@@ -194,7 +194,7 @@ class Cluster(Base, Store):
 		
 	@classmethod
 	def clusterize(klass, items, k, similarity_function, iterations):
-		centroids = random.sample(items, k)
+		centroids = random.sample(items, min(k, len(items)))
 		
 		for i in xrange(iterations):
 			clusters = [[] for i in xrange(k)]
