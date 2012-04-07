@@ -43,8 +43,21 @@ form#userinput > input[type="text"] {
 	display: block;
 }
 
+.removebox {
+	width: 12px;
+	height: 12px;
+	float: right;
+	display: inline-block;
+	background: transparent;
+}
+
 #container {
 	background: rgb(25,26,25);
+}
+
+#canvas {
+	width: 100%;
+	height: 100%;
 }
 
 #autocomplete {
