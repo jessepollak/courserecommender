@@ -107,12 +107,7 @@ $("document").ready( function () {
 	
 	$("#submit").hide();
     $("#courseheader").hide();
-    $("#new_username").hide();
-    $("#submit").click(function () {
-        $("#new_username").show();
-        return false;
-    });
-	
+    
 	$("#userinput input[type='text']").autocomplete({
 	    source: '/courses',
 	    autoFocus: true,
