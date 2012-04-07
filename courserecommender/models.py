@@ -131,6 +131,13 @@ class Course(Base, Store):
 	code = Column(String)
 	instructor = Column(String)
 
+	@classmethod
+	def search_by_keywords(klass, keywords):
+		q = klass.session().query(Course)
+		for word in keywords:
+			q = q.filter(Course.name.ilike('%' + word + '%'))
+		return q.all()
+
 class Cluster(Base, Store):
 	__tablename__ = 'clusters'
 
