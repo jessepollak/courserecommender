@@ -10,22 +10,26 @@ def init(url):
 	engine = create_engine(url, echo=True)
 	return sessionmaker(bind=engine)
 
-class User(Base):
+class Store:
+	_session = None
+	@classmethod
+	def session(klass):
+		return klass._session or flask.g.db
+	@classmethod
+	def all(klass):
+		return klass.session().query(klass).all()
+	def save(self):
+		self.__class__.session().add(self)
+		self.__class__.session().commit()
+
+
+class User(Base, Store):
 	__tablename__ = 'users'
 
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
 
-class UserStore:
-	def __init__(self, session):
-		self.session = session
-	def all(self):
-		return self.session.query(User).all()
-	def save(self, user):
-		self.session.add(user)
-		self.session.commit()
-
-class Ranking(Base):
+class Ranking(Base, Store):
 	__tablename__ = 'rankings'
 
 	id = Column(Integer, primary_key=True)
@@ -34,59 +38,12 @@ class Ranking(Base):
 	value = Column(Integer)
 	user = relationship("User", backref=backref("rankings"))
 
-class RankingStore:
-	def __init__(self, session):
-		self.session = session
-	def save(self, ranking):
-		self.session.add(ranking)
-		self.session.commit()
-	def find_all_by_user_ids(self, user_ids):
-		return self.session.query(Ranking).filter(Ranking.user_id.in_(user_ids)).all()
+	@classmethod
+	def find_all_by_user_ids(klass, user_ids):
+		session = (Session or flask.g.db)
+		return session.query(Ranking).filter(Ranking.user_id.in_(user_ids)).all()
 		
-class Course(Base):
+class Course(Base, Store):
 	__tablename__ = 'courses'
 
 	id = Column(Integer, primary_key=True)
-
-"""
-class CourseStore:
-	def __init__(self, session):
-		self.session = session
-	def all(self):
-		return self.session.query(Course).all()
-
-class Course(Model):
-	__
-	fields = ["id", "title"]
-
-class CourseStore(Store):
-	model = Course
-	table_name = "courses"
-
-class Ranking(Model):
-	fields = ["id", "value", "course_id", "user_id"]
-
-class RankingStore(Store):
-	model = Ranking
-	table_name = "rankings"
-	def find_all_by_user_ids(self, user_ids):
-		return self.select_where_in('user_id', user_ids)
-
-class User(Model):
-	fields = ["id", "username", "cluster_id"]
-	rankings = False
-
-class UserStore(Store):
-	model = User
-	table_name = "users"
-
-	def all_with_rankings(self):
-
-
-class Cluster(Model):
-	fields = ["id"]
-
-class ClusterStore(Store):
-	model = Cluster
-	table_name = "clusters"
-"""
