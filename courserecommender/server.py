@@ -35,12 +35,11 @@ def homepage():
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
     if request.method == "POST":
-        print g.db.query(models.User).filter(models.User.username==request.form['username'])
-        user = g.db.query(models.User).filter(models.User.username==request.form['username']).count()
+        print models.User.find_all_by_username(request.form['username'])
+        user = len(models.User.find_all_by_username(request.form['username']))
         if not user:
             new_user = models.User(username=request.form['username'])
-            g.db.add(new_user)
-            g.db.commit()
+            new_user.save()
         session['username'] = request.form['username']
         return redirect('/')
     else:

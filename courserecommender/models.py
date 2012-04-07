@@ -10,7 +10,7 @@ import pickle
 Base = declarative_base()
 from sqlalchemy import Column, ForeignKey, Integer, String, Text
 
-def init(url, echo=True):
+def init(url, echo=False):
 	engine = create_engine(url, echo=echo)
 	return sessionmaker(bind=engine)
 
@@ -35,6 +35,12 @@ class User(Base, Store):
 	cluster_id = Column(Integer, ForeignKey("clusters.id"))
 	cluster = relationship("Cluster", backref=backref("users"))
 
+	def save(self):
+		if self.cluster_id == None:
+			cluster = Cluster.cluster_for_user(self)
+			self.cluster_id = cluster.id
+		super(User, self).save()
+
 	def recommended_courses(self):
 		users_in_cluster = self.cluster.users[:]
 		users_in_cluster.remove(self)
@@ -54,6 +60,10 @@ class User(Base, Store):
 
 	def good_courses(self):
 		return self.__class__.session().query(Course).join("rankings", "user").filter(User.id == self.id).filter(Ranking.value > 0).all()
+
+	@classmethod
+	def find_all_by_username(klass, username):
+		return self.session().query(User).filter(User.username==username).all()
 
 	@classmethod
 	def similarity(klass, a, b):
@@ -134,16 +144,17 @@ class Cluster(Base, Store):
 				user.save()
 
 	@classmethod
-	def add_user(klass, user):
+	def cluster_for_user(klass, user):
 		clusters = klass.all()
+		if len(clusters) == 0:
+			return Cluster()
 		centroids = [cluster.get_centroid() for cluster in clusters]
 		cluster_index, similarity = max(
 			enumerate(User.similarity(item, centroid) for centroid in centroids), 
 			key=lambda (index,similarity): similarity
 		)
-		best_cluster = clusters[cluster_index]
-		user.cluster_id = best_cluster.id
-		user.save()
+		return clusters[cluster_index]
+		
 
 	@classmethod
 	def centroidify(klass, cluster): 
