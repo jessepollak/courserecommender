@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship, sessionmaker
 
 Base = declarative_base()
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
 
 def init(url):
 	engine = create_engine(url, echo=True)
@@ -28,6 +28,8 @@ class User(Base, Store):
 
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
+	cluster_id = Column(Integer)
+	cluster = relationship("Cluster", backref=backref("users"))
 
 class Ranking(Base, Store):
 	__tablename__ = 'rankings'
@@ -47,3 +49,9 @@ class Course(Base, Store):
 	__tablename__ = 'courses'
 
 	id = Column(Integer, primary_key=True)
+
+class Cluster(Base, Store):
+	__tablename__ = 'clusters'
+
+	id = Column(Integer, primary_key=True)
+	centroid = Column(Text)
