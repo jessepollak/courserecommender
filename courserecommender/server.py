@@ -11,9 +11,6 @@ app = Flask(__name__)
 app.secret_key = 'A0Zr98j/3yX R~XHH!j4mNLWX/,?RT'
 db = models.init(os.environ.get("DATABASE_URL", "sqlite:///development.sqlite3"))
 
-def _get_user():
-    return g.db.query(models.User).filter(models.User.username==request.form['username'])[0]
-
 @app.before_request
 def before_request():
 	g.db = db()
