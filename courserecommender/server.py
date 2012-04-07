@@ -46,7 +46,7 @@ def recommendations():
 	if not user:
 		user = models.User(username = request.form['username'])
 		cluster = models.Cluster.cluster_for_user(user)
-		self.cluster_id = cluster.id
+		user.cluster_id = cluster.id
 		user.save()
 	for key, value in request.form.items():
 		m = re.match("course_(\d+)", key)
