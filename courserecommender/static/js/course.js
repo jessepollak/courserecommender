@@ -73,9 +73,9 @@ function select_course(course) {
         }
     }
     selected_courses.push(course);
-    $("#autocomplete").append('<li id="' + id_for_course(course) + '">' +
-        '<strong>' + course.code + "</strong> &ndash; " + 
-        course.name);
+    $("#autocomplete").append('<tr id="' + id_for_course(course) + '"><td class="coursecode">' +
+        '<strong>' + course.code + "</strong>" + "</td><td>" +
+        course.name+'<font class="professor">' + "\t"+course.instructor + '</font></td></tr>');
     deletebtn("#"+id_for_course(course));
     
     $("#"+id_for_course(course)+" .remove").click(function (evt) {
@@ -84,8 +84,8 @@ function select_course(course) {
 }
 
 function deletebtn(somedivid) {
-	var target = $(somedivid).append("<div class='removebox'></div>").find("div")[0];
-	var canvas = Raphael(target,20,20);
+	var target = $(somedivid).append("<td class='removebox'></td>").find("td")[2];
+	var canvas = Raphael($("body"), 20,20);
 	target.appendChild(canvas.canvas);
 	var circ = canvas.ellipse(10,10,10,10).attr({fill:"rgb(50,52,50)", "stroke-width": 0,cursor: "pointer"});
 	var icon = canvas.path("m"+(8.5)+","+(8.5)+"v-5h3v5h5v3h-5v5h-3v-5h-5v-3z").attr({fill:"rgb(254,254,254)", "stroke-width": 0,cursor: "pointer"}).transform("r45");

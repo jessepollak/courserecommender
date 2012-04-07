@@ -18,6 +18,7 @@
     <hgroup>
       <h1>CourseRecommender</h1>
       <h2>Recommending courses and whatever.</h2>
+      {% if not auth_in_progress %}<h3>{% if session.username %}hi there {{ session.username }}, nice to see you! <a href="/logout">log out?</a>{% else %}been here before? <a href="/auth">log in!</a>{% endif %}</h3>{% endif %}
     </hgroup>
   </header>
   <div id="container">
