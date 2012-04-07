@@ -4,7 +4,6 @@ import itertools
 import re
 import os
 
-import database
 import models
 
 app = Flask(__name__)
