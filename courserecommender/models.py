@@ -7,8 +7,8 @@ import pickle
 Base = declarative_base()
 from sqlalchemy import Column, ForeignKey, Integer, String, Text
 
-def init(url):
-	engine = create_engine(url, echo=True)
+def init(url, echo=False):
+	engine = create_engine(url, echo=echo)
 	return sessionmaker(bind=engine)
 
 class Store:
@@ -29,7 +29,7 @@ class User(Base, Store):
 
 	id = Column(Integer, primary_key=True)
 	username = Column(String)
-	cluster_id = Column(Integer)
+	cluster_id = Column(Integer, ForeignKey("clusters.id"))
 	cluster = relationship("Cluster", backref=backref("users"))
 
 	def __repr__(self):

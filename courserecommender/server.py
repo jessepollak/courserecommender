@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, g, render_template
+from flask import Flask, g, render_template, request
 from flaskext.sqlalchemy import SQLAlchemy
 import itertools
 import os
@@ -27,6 +27,14 @@ def courses_index():
 @app.route('/')
 def homepage():
     return render_template('homepage.html')
+
+@app.route('/auth')
+def auth():
+    if request.method == "POST":
+        print g.db.query(models.User).filter(models.User.username==request.form['username'])
+        return ''
+    else:
+        return render_template('login.html')
 
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
