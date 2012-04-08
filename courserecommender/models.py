@@ -1,5 +1,6 @@
 import flask
 from itertools import groupby
+import json
 import math
 import random
 from sqlalchemy import create_engine
@@ -35,13 +36,10 @@ class User(Base, Store):
 	cluster_id = Column(Integer, ForeignKey("clusters.id"))
 	cluster = relationship("Cluster", backref=backref("users"))
 
-	def save(self):
-		if self.cluster_id == None:
-			cluster = Cluster.cluster_for_user(self)
-			self.cluster_id = cluster.id
-		super(User, self).save()
-
 	def recommended_courses(self):
+		if not self.cluster:
+			return []
+
 		users_in_cluster = self.cluster.users[:]
 		users_in_cluster.remove(self)
 		random_users = random.sample(users_in_cluster, min(5, len(users_in_cluster)))
@@ -128,22 +126,38 @@ class Course(Base, Store):
 	code = Column(String)
 	instructor = Column(String)
 
+	@classmethod
+	def search_by_keywords(klass, keywords):
+		q = klass.session().query(Course)
+		for word in keywords:
+			q = q.filter(Course.name.ilike('%' + word + '%'))
+		return q.all()
+
+class Centroid:
+	def __init__(self, rankings):
+		self.rankings = rankings
+
 class Cluster(Base, Store):
 	__tablename__ = 'clusters'
 
 	id = Column(Integer, primary_key=True)
 	centroid = Column(Text)
-	
+
 	def get_centroid(self):
-		return pickle.loads(self.centroid)
+		rankings = json.loads(self.centroid)
+		return Centroid(Ranking(course_id=r["course_id"], value=r["value"]) for r in rankings)
 		
-	def set_centroid(self, rankings):
-		self.centroid = pickle.dumps(self.centroid)
+	def set_centroid(self, user):
+		self.centroid = json.dumps([{"course_id": r.course_id, "value": r.value} for r in user.rankings])
+		print self.centroid
 	
 	@classmethod
-	def make_clusters(klass):
-		clusters = Cluster.clusterize(User.all(), 5, User.similarity, 5)
-		klass.session().execute("DELETE FROM 'clusters'")
+	def make_clusters(klass, k=3):
+		clusters = Cluster.clusterize(User.all(), k, User.similarity, 5)
+		for u in User.all():
+			u.cluster_id = None
+			u.save()
+		klass.session().query(Cluster).delete()
 		# TODO LATER: RACE CONDITIONS. What happens if a user is added right now?
 		for users, centroid in clusters:
 			c = Cluster()
@@ -160,7 +174,7 @@ class Cluster(Base, Store):
 			return Cluster()
 		centroids = [cluster.get_centroid() for cluster in clusters]
 		cluster_index, similarity = max(
-			enumerate(User.similarity(item, centroid) for centroid in centroids), 
+			enumerate(User.similarity(user, centroid) for centroid in centroids if centroid), 
 			key=lambda (index,similarity): similarity
 		)
 		return clusters[cluster_index]
@@ -180,11 +194,11 @@ class Cluster(Base, Store):
 			average = sum(r.value for r in group) / float(cluster_size)
 			average_rankings.append(Ranking(course_id = course_id, value = average))
 				
-		return User(rankings = average_rankings)
+		return Centroid(average_rankings)
 		
 	@classmethod
 	def clusterize(klass, items, k, similarity_function, iterations):
-		centroids = random.sample(items, k)
+		centroids = random.sample(items, min(k, len(items)))
 		
 		for i in xrange(iterations):
 			clusters = [[] for i in xrange(k)]

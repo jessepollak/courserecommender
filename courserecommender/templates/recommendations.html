@@ -6,6 +6,8 @@
 <ul class="biglist">
 	{% for course in recommendations %}
 		<li>{{ course.name }}</li>
+	{% else %}
+		<img src="http://cdn.aceonlineschools.com/wp-content/uploads/2011/08/billnye1.jpg"/>
 	{% endfor %}
 </ul>
 

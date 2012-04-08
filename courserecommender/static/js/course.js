@@ -85,7 +85,7 @@ function select_course(course) {
         '<td><input type="radio" value="0" name="course_' + course.id +'"></td>' +
         '<td><input type="radio" value="1" name="course_' + course.id +'"></td>' +
         '<td><input type="radio" value="2" name="course_' + course.id +'"></td>' +
-        '<td><span class="remove">X</span></td>' +
+        '<td><img class="remove" src="/static/images/delete.png" width="16" height="16"></td>' +
         '</tr>');
     $("#" + course.id + " .remove").click(function (evt) {
         remove_course(course_for_id(this.parentNode.parentNode.id));
@@ -111,6 +111,7 @@ $("document").ready( function () {
 	$("#userinput input[type='text']").autocomplete({
 	    source: '/courses',
 	    autoFocus: true,
+	    minLength: 3,
 	    search: function (event, ui) { console.log("Searching..."); },
 	    select: function (event, ui) {
 	        var course =  {"id": ui.item.value, "name": ui.item.label};
